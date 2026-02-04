@@ -1,0 +1,46 @@
+.about-img {
+  width: min(90vw, 420px);
+  height: auto;
+  margin: 0 auto 2rem;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+@media (min-width: 768px) {
+  .about-img {
+    width: min(42vw, 500px);
+    margin-bottom: 0;
+  }
+}
+
+/* 桌機再放寬 */
+@media (min-width: 1200px) {
+  .about-img {
+    width: 520px;
+  }
+}
+
+.section-gap {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  margin-bottom: 1.5rem;
+}
+
+.about-page {
+  font-size: clamp(16px, 1rem + 0.4vw, 20px);
+  line-height: 1.6;
+}
+
+.about-page h3 {
+  font-size: clamp(24px, 1.2rem + 1vw, 34px);
+  font-weight: 700;
+}
+
+.about-page h4 {
+  font-size: clamp(20px, 1.1rem + 0.6vw, 28px);
+  font-weight: 700;
+}

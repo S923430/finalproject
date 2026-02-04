@@ -1,0 +1,24 @@
+.ProductList {
+  margin-top: 46px;
+  .list-style {
+    color: $navbar-bg !important;
+  }
+
+  .active {
+    background-color: $navbar-bg !important;
+    color: $navbar-active-bg !important;
+  }
+}
+
+.body {
+  // min-height: 100vh;
+  margin-top: 46px;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+.card-img-top {
+  border-radius: 4px; // 可以加一點圓角
+}

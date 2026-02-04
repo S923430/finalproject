@@ -1,0 +1,56 @@
+/* 針對「你可能有興趣」的卡片做統一樣式 */
+.suggest-swiper .card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.suggest-swiper .card-body {
+  flex: 1 1 auto; /* 讓標題區把空間吃滿，按鈕能貼底 */
+}
+
+/* 商品圖固定比例＋等比置中 */
+.suggest-swiper .card-img-top {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain; /* 圖片不裁切、保持完整 */
+  background: #fff; /* 透明圖檔時比較好看 */
+}
+
+/* 標題最多兩行，避免高度忽大忽小 */
+.suggest-swiper .card-title {
+  line-height: 1.3;
+  min-height: calc(1.3em * 2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 產品頁面的基本樣式 - 移除所有強制高度設定 */
+.bg-light.product-page {
+  /* 移除 min-height 設定，讓 App.vue 處理整體佈局 */
+  /* 只保留必要的 padding 和樣式 */
+  padding: 1rem 0;
+}
+
+/* Swiper 容器的樣式調整 */
+.suggest-swiper {
+  margin: 0;
+  padding: 0;
+  --bs-gutter-y: 0;
+  --bs-gutter-x: 0.5rem; /* 保持水平間距 */
+  overflow-x: clip;
+}
+
+/* 確保 swiper-container 樣式乾淨 */
+swiper-container.suggest-swiper {
+  margin: 0;
+  padding: 0;
+}
+
+/* 建議商品區塊樣式 */
+.product-page .col-lg-9 h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,19 @@
+@import '~bootstrap/scss/functions';
+@import './helpers/variables';
+
+@import './helpers/usernavbar';
+@import './helpers/home-style';
+@import './helpers/swiper-component';
+@import './helpers/_footer.scss';
+@import './helpers/latest-news';
+@import './helpers/productcontent';
+@import './helpers/userproducts';
+@import './helpers/productall';
+@import './helpers/about';
+@import './helpers/random-products';
+
+@import '~bootstrap/scss/maps';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/root';
+
+@import '~bootstrap/scss/bootstrap';

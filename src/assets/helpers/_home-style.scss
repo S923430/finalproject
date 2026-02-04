@@ -1,0 +1,78 @@
+// 隱藏圖片下方的順序(虛線)
+.carousel-indicators {
+  display: none;
+}
+
+.my-carousel,
+.my-carousel .carousel,
+.my-carousel .carousel-inner,
+.my-carousel .carousel-item {
+  width: 100vw;
+  height: 600px;
+}
+
+.carousel-img {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 40px;
+  padding: 1rem 1.5rem;
+  left: 45%;
+  right: 45%;
+}
+
+@media (max-width: 768px) {
+  .my-carousel,
+  .my-carousel .carousel,
+  .my-carousel .carousel-inner,
+  .my-carousel .carousel-item,
+  .carousel-img {
+    height: 320px !important;
+  }
+  .carousel-caption h5,
+  .carousel-caption p {
+    display: none;
+  }
+  .carousel-caption {
+    background: none;
+    padding: 0;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    text-align: center;
+  }
+  .carousel-caption a {
+    font-size: 1rem;
+    padding: 0.4rem 1.2rem;
+  }
+}
+@media (max-width: 430px) {
+  .my-carousel,
+  .my-carousel .carousel,
+  .my-carousel .carousel-inner,
+  .my-carousel .carousel-item,
+  .carousel-img {
+    height: 200px !important;
+  }
+  .carousel-caption h5,
+  .carousel-caption p {
+    display: none;
+  }
+  .carousel-caption {
+    background: none;
+    padding: 0;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    text-align: center;
+  }
+  .carousel-caption a {
+    font-size: 1rem;
+    padding: 0.4rem 1.2rem;
+  }
+}
