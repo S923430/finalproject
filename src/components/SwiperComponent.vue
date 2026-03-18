@@ -131,9 +131,9 @@ onMounted(() => {
       }
     },
     {
-      threshold: 0.6, // ✅ 25% 可見時切換
+      threshold: 0.4, // ✅ 25% 可見時切換
       rootMargin: '-100px 0px', // ✅ 上下各預留 100px 緩衝
-    }
+    },
   );
 
   if (scrollTarget.value) {

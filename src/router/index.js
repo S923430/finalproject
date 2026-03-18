@@ -51,6 +51,19 @@ const routes = [
     meta: { title: '商品詳情' },
   },
   {
+    path: '/order',
+    name: 'Order',
+    component: () => import('../views/OrderView.vue'),
+    meta: { title: '填寫資料' },
+  },
+  {
+    path: '/checkout/:orderId',
+    name: 'Checkout',
+    component: () => import('../views/CheckoutView.vue'),
+    meta: { title: '結帳確認' },
+  },
+
+  {
     path: '/about',
     name: 'AboutPage',
     component: () => import('../views/AboutPage.vue'),

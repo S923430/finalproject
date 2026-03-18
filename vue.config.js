@@ -10,4 +10,5 @@ module.exports = defineConfig({
       title: 'SlideX',
     },
   },
+  publicPath: process.env.NODE_ENV === 'production' ? '/finalproject/' : '/',
 });
