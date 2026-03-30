@@ -3,7 +3,6 @@ import axios from 'axios';
 import $httpMessage from '@/methods/pushMessage';
 
 export const useCartStore = defineStore('cart', {
-  // 1. State: 相當於元件裡的 data
   state: () => ({
     cart: {
       carts: [],
@@ -13,31 +12,49 @@ export const useCartStore = defineStore('cart', {
     isLoading: false,
   }),
 
-  // 2. Getters: 相當於元件裡的 computed
   getters: {
-    // 自動計算購物車內商品總數量 (qty 總和)
     totalQty: (state) => {
       const carts = state.cart.carts || [];
       return carts.reduce((sum, item) => sum + item.qty, 0);
     },
   },
 
-  // 3. Actions: 相當於元件裡的 methods
   actions: {
-    // 取得購物車列表
-    getCart() {
+    // 1. 取得購物車 (改成 async)
+    async getCart() {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`;
       this.isLoading = true;
-      return axios.get(api).then((res) => {
+      try {
+        const res = await axios.get(api);
         if (res.data.success) {
           this.cart = res.data.data;
-          this.isLoading = false;
         }
-      });
+      } catch (err) {
+        console.error('取得購物車失敗', err);
+      } finally {
+        this.isLoading = false;
+      }
     },
 
-    // 加入購物車 (原本分散在各個商品頁)
-    addToCart(id, qty = 1, size = '') {
+    // 🌟 2. 新增：自動讀取並套用優惠券
+    async autoApplyCoupon() {
+      const savedCoupon = localStorage.getItem('savedCoupon');
+      if (savedCoupon) {
+        console.log('🕵️ 系統偵測到優惠碼，準備在背景套用：', savedCoupon); // 👈 加上這行來除錯
+        const couponUrl = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/coupon`;
+        try {
+          await axios.post(couponUrl, { data: { code: savedCoupon } });
+          console.log('✅ 背景套用優惠券成功！'); // 👈 加上這行來除錯
+        } catch (error) {
+          console.error('❌ 背景套用優惠券失敗', error);
+        }
+      } else {
+        console.log('⚠️ 記憶體中沒有優惠碼，跳過套用');
+      }
+    },
+
+    // 3. 加入購物車
+    async addToCart(id, qty = 1, size = '') {
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`;
       this.isLoading = true;
       const cart = {
@@ -46,40 +63,55 @@ export const useCartStore = defineStore('cart', {
         size: size || undefined,
       };
 
-      return axios.post(url, { data: cart }).then((res) => {
-        this.isLoading = false;
-        // 跳出 Toast 通知
+      try {
+        const res = await axios.post(url, { data: cart });
         $httpMessage(res, '加入購物車');
-        // ✅ 關鍵：加入成功後，立刻重新抓取購物車資料
-        // 這樣所有訂閱這個 Store 的元件 (如 Navbar) 都會自動更新
-        this.getCart();
-      });
+
+        // ★ 關鍵：加入商品後，偷偷幫它把優惠券打上去，再抓取最終資料
+        await this.autoApplyCoupon();
+        await this.getCart();
+      } catch (err) {
+        console.error('加入購物車失敗', err);
+      } finally {
+        this.isLoading = false;
+      }
     },
 
-    // 刪除購物車項目
-    removeCartItem(id) {
+    // 4. 刪除購物車項目
+    async removeCartItem(id) {
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/${id}`;
       this.isLoading = true;
-      return axios.delete(url).then((res) => {
+      try {
+        const res = await axios.delete(url);
         $httpMessage(res, '移除商品');
-        this.getCart(); // 更新資料
+        await this.getCart();
+      } catch (err) {
+        console.error('移除失敗', err);
+      } finally {
         this.isLoading = false;
-      });
+      }
     },
 
-    // 更新購物車數量
-    updateCartItem(item) {
+    // 5. 更新購物車數量
+    async updateCartItem(item) {
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart/${item.id}`;
       this.isLoading = true;
       const cart = {
         product_id: item.product_id,
         qty: item.qty,
       };
-      return axios.put(url, { data: cart }).then((res) => {
+      try {
+        const res = await axios.put(url, { data: cart });
         $httpMessage(res, '更新數量');
-        this.getCart(); // 更新資料
+
+        // ★ 關鍵：更新數量後，偷偷把被後端拔掉的優惠券貼回去，再抓取最終資料
+        await this.autoApplyCoupon();
+        await this.getCart();
+      } catch (err) {
+        console.error('更新數量失敗', err);
+      } finally {
         this.isLoading = false;
-      });
+      }
     },
   },
 });

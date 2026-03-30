@@ -116,20 +116,6 @@ export default {
     };
   },
   emits: ['update-coupon'],
-  // watch: {
-  //   coupon() {
-  //     this.tempCoupon = this.coupon;
-  //     // 將時間格式改為 YYYY-MM-DD
-  //     console.log(this.tempCoupon.due_date);
-  //     const dateAndTime = new Date(this.tempCoupon.due_date * 1000)
-  //       .toISOString()
-  //       .split('T');
-  //     [this.due_date] = dateAndTime;
-  //   },
-  //   due_date() {
-  //     this.tempCoupon.due_date = Math.floor(new Date(this.due_date) / 1000);
-  //   },
-  // },
   watch: {
     coupon: {
       immediate: true,
@@ -151,7 +137,7 @@ export default {
       },
     },
     due_date(newDate) {
-      this.tempCoupon.due_date = Math.floor(new Date(newDate) / 1000);
+      this.localCoupon.due_date = Math.floor(new Date(newDate) / 1000);
     },
   },
   mixins: [modalMixin],

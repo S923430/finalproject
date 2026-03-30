@@ -8,10 +8,10 @@
         <div class="col-lg-7 bg-light rounded-3 my-5">
           <div class="bg-light px-2 py-3 rounded-3">
             <h4 class="ps-2 fw-bold text-dark">訂單明細</h4>
-            <table class="text-nowrap">
+            <table class="text-nowrap w-100">
               <thead>
                 <tr class="text-center">
-                  <th width="180" class="d-none d-lg-block"></th>
+                  <th width="100">圖片</th>
                   <th width="150">產品名稱</th>
                   <th width="80">尺寸</th>
                   <th width="100">數量</th>
@@ -24,17 +24,22 @@
                   v-for="item in order.products"
                   :key="item.id"
                 >
-                  <img
-                    :src="item.product.imageUrl"
-                    class="d-block w-100 d-none d-lg-block"
-                    alt="產品圖示"
-                  />
-                  <td>{{ item.product.title }}</td>
-                  <td class="text-right">M</td>
-                  <td class="text-right">
+                  <td class="align-middle">
+                    <img
+                      :src="item.product.imageUrl"
+                      class="img-fluid rounded"
+                      style="max-width: 100px; min-width: 70px"
+                      alt="產品圖示"
+                    />
+                  </td>
+                  <td class="align-middle text-wrap">
+                    {{ item.product.title }}
+                  </td>
+                  <td class="align-middle text-right">M</td>
+                  <td class="align-middle text-right">
                     {{ item.qty }}/{{ item.product.unit }}
                   </td>
-                  <td>
+                  <td class="align-middle">
                     <span class="text-danger">{{ item.final_total }}</span>
                   </td>
                 </tr>

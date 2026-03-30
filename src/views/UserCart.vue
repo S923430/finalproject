@@ -9,71 +9,144 @@
         <div class="col-12 col-lg-7 my-3 my-lg-0">
           <div class="bg-light px-2 py-3 rounded-3">
             <h4 class="ps-2 fw-bold text-dark">購物車內容</h4>
-            <table class="">
-              <thead>
-                <tr class="text-center">
-                  <th width="150" class="d-none d-lg-block"></th>
-                  <th width="140">產品名稱</th>
-                  <th width="120">尺寸</th>
-                  <th width="75">數量</th>
-                  <th width="120">單價</th>
-                  <th width="50"></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="text-center"
-                  v-for="item in cart.carts"
-                  :key="item.id"
-                >
-                  <img
-                    :src="item.product.imageUrl"
-                    class="cart-img d-none d-lg-block"
-                    alt="產品圖"
-                  />
-                  <td>{{ item.product.title }}</td>
-                  <td class="px-3">
-                    <select class="form-select">
-                      <option v-for="item in productSize" :key="item.choose">
-                        {{ item.choose }}
-                      </option>
-                    </select>
-                  </td>
-                  <td class="text-right">
-                    <div class="input-group mt-lg-1">
-                      <input
-                        type="number"
-                        class="form-control text-center"
-                        aria-label="Example text with button addon"
-                        aria-describedby="button-addon1"
-                        v-model.number="item.qty"
-                        min="1"
-                        :disabled="item.id === this.status.loadingItem"
-                        @change="updateCart(item)"
+            <div class="table-responsive mt-3 d-none d-md-block">
+              <table class="table align-middle text-nowrap mb-0">
+                <thead>
+                  <tr class="text-center">
+                    <th width="100">圖片</th>
+                    <th width="140">產品名稱</th>
+                    <th width="100">尺寸</th>
+                    <th width="100">數量</th>
+                    <th width="120">單價</th>
+                    <th width="50">刪除</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class="text-center"
+                    v-for="item in cart.carts"
+                    :key="item.id"
+                  >
+                    <td>
+                      <img
+                        :src="item.product.imageUrl"
+                        class="img-fluid rounded"
+                        style="
+                          max-width: 80px;
+                          min-width: 60px;
+                          object-fit: cover;
+                        "
+                        alt="產品圖"
                       />
+                    </td>
+                    <td class="text-wrap text-start" style="min-width: 130px">
+                      {{ item.product.title }}
+                    </td>
+                    <td class="px-2">
+                      <select class="form-select form-select-sm">
+                        <option v-for="size in productSize" :key="size.choose">
+                          {{ size.choose }}
+                        </option>
+                      </select>
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-center">
+                        <input
+                          type="number"
+                          class="form-control form-control-sm text-center"
+                          style="min-width: 60px; max-width: 80px"
+                          v-model.number="item.qty"
+                          min="1"
+                          :disabled="item.id === status.loadingItem"
+                          @change="updateCart(item)"
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <span class="text-danger fw-bold"
+                        >${{ $filters.currency(item.product.price) }}</span
+                      >
+                    </td>
+                    <td>
+                      <button
+                        class="btn btn-outline-danger btn-sm"
+                        type="button"
+                        @click="removeCartItem(item.id)"
+                        :disabled="item.id === status.loadingItem"
+                      >
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-3 d-md-none">
+              <div
+                class="card mb-3 border-0 shadow-sm"
+                v-for="item in cart.carts"
+                :key="item.id"
+              >
+                <div class="row g-0 align-items-center p-2">
+                  <div class="col-4 text-center">
+                    <img
+                      :src="item.product.imageUrl"
+                      class="img-fluid rounded"
+                      style="max-height: 100px; object-fit: cover"
+                      alt="產品圖"
+                    />
+                  </div>
+
+                  <div class="col-8">
+                    <div class="card-body p-2 position-relative">
+                      <button
+                        type="button"
+                        class="btn-close position-absolute top-0 end-0 mt-2 me-2"
+                        @click="removeCartItem(item.id)"
+                        :disabled="item.id === status.loadingItem"
+                      ></button>
+
+                      <h6 class="card-title text-truncate pe-4 mb-2">
+                        {{ item.product.title }}
+                      </h6>
+
+                      <div class="mb-2 d-flex align-items-center">
+                        <span class="text-muted small me-2">尺寸</span>
+                        <select class="form-select form-select-sm w-auto py-0">
+                          <option
+                            v-for="size in productSize"
+                            :key="size.choose"
+                          >
+                            {{ size.choose }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div
+                        class="d-flex justify-content-between align-items-center"
+                      >
+                        <input
+                          type="number"
+                          class="form-control form-control-sm text-center"
+                          style="width: 70px"
+                          v-model.number="item.qty"
+                          min="1"
+                          :disabled="item.id === status.loadingItem"
+                          @change="updateCart(item)"
+                        />
+                        <span class="text-danger fw-bold fs-5">
+                          ${{ $filters.currency(item.product.price) }}
+                        </span>
+                      </div>
                     </div>
-                  </td>
-                  <td>
-                    <span class="text-danger"
-                      >${{ $filters.currency(item.product.price) }}</span
-                    >
-                  </td>
-                  <td>
-                    <button
-                      class="btn btn-outline-danger btn-sm"
-                      type="button"
-                      @click="removeCartItem(item.id)"
-                      :disabled="item.id === status.loadingItem"
-                    >
-                      <i class="bi bi-x"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="text-end pe-4" v-if="this.qtyWarning == true">
-              <p class="text-end text-danger fs-4">商品數量上限為50</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-end pe-4 mt-2" v-if="qtyWarning == true">
+              <p class="text-danger fs-5 mb-0">商品數量上限為50</p>
             </div>
           </div>
         </div>
@@ -118,7 +191,9 @@
                 </tr>
                 <tr v-if="cart.final_total !== cart.total">
                   <th colspan="2" class="text-dark"></th>
-                  <td class="text-end text-success">已套用優惠券</td>
+                  <td class="text-end text-success">
+                    已套用優惠券：{{ cart.carts[0]?.coupon?.title }}
+                  </td>
                 </tr>
               </tfoot>
             </table>
@@ -169,29 +244,17 @@ export default {
         loadingItem: '',
       },
       coupon_code: '',
-      productSize: [
-        // { choose: 'XS' },
-        // { choose: 'S' },
-        { choose: 'M' },
-        // { choose: 'L' },
-        // { choose: 'XL' },
-      ],
+      productSize: [{ choose: 'M' }],
       qtyWarning: false,
     };
   },
   provide() {
-    return {
-      emitter,
-    };
+    return { emitter };
   },
   inject: ['emitter', 'reload'],
   computed: {
-    //  映射 Store 的購物車資料
     ...mapState(useCartStore, ['cart']),
-
-    // 自動判斷購物車是否為空 (控制 "下一步" 按鈕)
     cartWarning() {
-      // 如果沒有 carts 陣列，或是長度為 0，或是總金額為 0，就鎖住按鈕
       return (
         !this.cart.carts ||
         this.cart.carts.length === 0 ||
@@ -204,75 +267,84 @@ export default {
       getCartAction: 'getCart',
       removeCartItemAction: 'removeCartItem',
       updateCartItemAction: 'updateCartItem',
+      autoApplyCoupon: 'autoApplyCoupon', // 引入 Store 的自動套用方法
     }),
-    getCart() {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`;
+
+    async getCart() {
       this.isLoading = true;
-      this.$http.get(api).then((res) => {
+      try {
+        // 進入畫面時，確保先背景套用一次優惠碼，再抓資料
+        await this.autoApplyCoupon();
+        await this.getCartAction();
+      } catch (err) {
+        console.error('取得購物車失敗:', err);
+      } finally {
         this.isLoading = false;
-        if (res.data.success) {
-          this.cart = res.data.data;
-          if (this.cart.total === 0) {
-            this.cartWarning = true;
-          } else {
-            this.cartWarning = false;
-          }
-        }
-      });
+      }
     },
 
-    updateCart(item) {
+    async updateCart(item) {
       if (item.qty >= 51) {
         this.qtyWarning = true;
         return;
       }
       this.status.loadingItem = item.id;
-      this.updateCartItemAction(item).then(() => {
-        this.status.loadingItem = '';
-        this.qtyWarning = false;
-      });
+      // 直接呼叫聰明的 Store，它會自動更新數量 -> 套用優惠券 -> 更新畫面
+      await this.updateCartItemAction(item);
+      this.status.loadingItem = '';
+      this.qtyWarning = false;
     },
 
-    removeCartItem(id) {
+    async removeCartItem(id) {
       this.status.loadingItem = id;
-      // 使用 Store 的方法刪除，Store 會處理 API 並更新 cart 資料
-      this.removeCartItemAction(id).then(() => {
-        this.status.loadingItem = '';
-      });
+      await this.removeCartItemAction(id);
+      this.status.loadingItem = '';
     },
 
-    addCouponCode() {
+    async addCouponCode() {
+      if (!this.coupon_code) {
+        alert('請輸入優惠碼');
+        return;
+      }
+
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/coupon`;
       const coupon = { code: this.coupon_code };
       this.isLoading = true;
-      this.$http.post(url, { data: coupon }).then(() => {
-        // 成功後，呼叫 Store 重新抓取資料
-        this.getCartAction();
-        this.coupon_code = '';
+
+      try {
+        const res = await this.$http.post(url, { data: coupon });
+
+        if (res.data.success) {
+          // ★ 成功後，存入 localStorage 讓全站記住這個優惠碼
+          localStorage.setItem('savedCoupon', this.coupon_code);
+
+          await this.getCartAction();
+          const appliedCoupon = this.cart.carts[0]?.coupon;
+          if (appliedCoupon?.title) {
+            alert(`成功套用優惠券：${appliedCoupon.title}`);
+          } else {
+            alert('優惠券套用成功！');
+          }
+          this.coupon_code = '';
+        } else {
+          // 失敗則清除記憶
+          localStorage.removeItem('savedCoupon');
+          alert(res.data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('網路連線錯誤，請稍後再試');
+      } finally {
         this.isLoading = false;
-      });
+      }
     },
 
     cartNext() {
       this.$router.push('/order');
     },
   },
-  // created() {
-  //   emitter.on('updateCart', () => {
-  //     this.getCart();
-  //   });
-  // },
   mounted() {
-    this.getCartAction().then(() => {
-      // 如果 Store 的 getCart 有回傳 Promise 這裡才會執行
-      // 如果沒回傳也沒關係，Store 更新後 computed 會自動反應
-      this.isLoading = false;
-    });
-    // 保險起見，手動關閉 loading (因為目前 store 的 getCart 可能沒回傳 promise)
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1000);
-
+    this.getCart();
     AOS.init();
   },
 };
